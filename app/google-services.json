@@ -1,0 +1,56 @@
+{
+  "project_info": {
+    "project_number": "615845445605",
+    "firebase_url": "https://registrodeinfracoes.firebaseio.com",
+    "project_id": "registrodeinfracoes",
+    "storage_bucket": "registrodeinfracoes.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:615845445605:android:5677674369829759",
+        "android_client_info": {
+          "package_name": "com.sirint.registrodeinfracoes"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "615845445605-jm5bq8jcib8fobegqdag4fdbbujhird0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sirint.registrodeinfracoes",
+            "certificate_hash": "8bfc2641a73264ba7383048019c2041fcc5e4541"
+          }
+        },
+        {
+          "client_id": "615845445605-icm4oeha5kehbplg4a2996bsm8a5meoi.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sirint.registrodeinfracoes",
+            "certificate_hash": "1c0eabb63ffcb85755f4309c5300f8d82a315f18"
+          }
+        },
+        {
+          "client_id": "615845445605-7nplgn3iev8bjq9a3qt21acqf4bessd5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBol1Z88-8TPGnpoctel-yoWEALnPPpf_c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "615845445605-7nplgn3iev8bjq9a3qt21acqf4bessd5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

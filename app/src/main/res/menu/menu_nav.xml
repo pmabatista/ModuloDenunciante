@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group>
+        <item
+            android:id="@+id/nav_item_one"
+            android:icon="@android:drawable/ic_menu_camera"
+            android:title="Home"
+            />
+        <item
+            android:id="@+id/nav_item_two"
+            android:icon="@android:drawable/ic_menu_manage"
+            android:title="Configurações" />
+        <item
+            android:id="@+id/nav_item_six"
+            android:icon="@android:drawable/ic_menu_help"
+            android:title="Ajuda" />
+        <item
+            android:id="@+id/nav_item_seven"
+            android:icon="@android:drawable/ic_menu_close_clear_cancel"
+            android:title="Sair" />
+    </group>
+</menu>
