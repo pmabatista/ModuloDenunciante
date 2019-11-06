@@ -2,7 +2,9 @@ package com.sirint.registrodeinfracoes.camera.texture;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.view.TextureView;
+import android.view.View;
 
 /**
  * A {@link TextureView} that can be adjusted to a specified aspect ratio.
@@ -23,7 +25,6 @@ public class AutoFitTextureView extends TextureView {
     public AutoFitTextureView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
     }
-
     /**
      * Sets the aspect ratio for this view. The size of the view will be measured based on the ratio
      * calculated from the parameters. Note that the actual sizes of parameters don't matter, that

@@ -50,7 +50,10 @@ import java.math.BigInteger;
 import java.nio.file.Files;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -78,6 +81,7 @@ public class RegistryActivity extends Activity implements IGetUrl {
     private String fToken;
     private ProgressBar progressBar;
     private StorageReference mStorageRef;
+    private String status = "em aberto";
     SharedPreferences sharedPreferences;
 
 
@@ -247,6 +251,12 @@ public class RegistryActivity extends Activity implements IGetUrl {
 
     }
 
+    private String getDateTime() {
+        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        Date date = new Date();
+        return dateFormat.format(date);
+    }
+
     public void insertDB() {
         String placaVeiculo = editPlacaVeiculo.getText().toString().trim();
         String marcaVeiculo = editMarcaVeiculo.getText().toString().trim();
@@ -255,7 +265,7 @@ public class RegistryActivity extends Activity implements IGetUrl {
         String indInfracao = editIndInfracao.getText().toString().trim();
         String observacoes = editObservacoes.getText().toString().trim();
         String key = ref.child("denuncias").push().getKey();
-        Denuncia denuncia = new Denuncia(placaVeiculo, indLocal, indInfracao, observacoes, marcaVeiculo, modeloVeiculo);
+        Denuncia denuncia = new Denuncia(placaVeiculo, indLocal, indInfracao, observacoes, marcaVeiculo, modeloVeiculo, getDateTime(), status);
         Map<String, Object> denunciaValues = denuncia.toMap();
         Map<String, Object> childUpdates = new HashMap<>();
         childUpdates.put("modulousuario/denuncias/" + key, denunciaValues);

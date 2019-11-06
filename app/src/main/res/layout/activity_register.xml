@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/back_oficial"
     android:padding="10dp"
     tools:context=".RegisterActivity">
 
@@ -11,24 +12,20 @@
         android:id="@+id/voltar_login"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="548dp"
         android:onClick="voltarLogin"
-        android:src="@drawable/arrow_back"
+        android:src="@drawable/btn_white_back"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="0.046"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout2"
+        app:layout_constraintVertical_bias="0.886" />
 
     <LinearLayout
+        android:id="@+id/linearLayout2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
         android:gravity="center"
@@ -37,8 +34,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.421"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/voltar_login"
-        app:layout_constraintVertical_bias="0.0">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.232">
 
 
         <TextView
@@ -50,46 +47,53 @@
             android:layout_marginTop="56dp"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
+            android:fontFamily="@font/msemibold"
             android:text="Novo Usuário"
-            android:fontFamily="sans-serif-black"
-
+            android:textColor="@color/registry_color"
             android:textSize="30sp" />
 
         <EditText
             android:id="@+id/nome_usuario"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/mlight"
             android:hint="@string/nome_info"
-            android:textSize="@dimen/fontRegistry"
-            android:fontFamily="sans-seriff"
-            />
+            android:textColor="@color/registry_color"
+            android:textColorHint="@color/registry_color"
+            android:textSize="@dimen/fontRegistry" />
 
         <EditText
             android:id="@+id/login_novo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginVertical="@dimen/marginVertical"
-            android:fontFamily="sans-seriff"
-            android:textSize="@dimen/fontRegistry"
-            android:hint="@string/login_info" />
+            android:fontFamily="@font/mlight"
+            android:hint="@string/login_info"
+            android:textColor="@color/registry_color"
+            android:textColorHint="@color/registry_color"
+            android:textSize="@dimen/fontRegistry" />
 
         <EditText
             android:id="@+id/senha_novo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginVertical="@dimen/marginVertical"
-            android:fontFamily="sans-seriff"
-            android:textSize="@dimen/fontRegistry"
+            android:fontFamily="@font/mlight"
             android:hint="@string/senha_info"
-            android:inputType="textPassword" />
+            android:inputType="textPassword"
+            android:textColor="@color/registry_color"
+            android:textColorHint="@color/registry_color"
+            android:textSize="@dimen/fontRegistry" />
 
         <Button
             android:id="@+id/cadastrar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginVertical="20dp"
+            android:fontFamily="@font/msemibold"
             android:onClick="cadastrar"
             android:text="@string/cadastrar"
+
             android:textSize="@dimen/fontRegistry" />
 
 

@@ -29,6 +29,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.sirint.registrodeinfracoes.camera.Camera;
 
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
@@ -52,11 +53,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = findViewById(R.id.toolbar);
         toolbar.setVisibility(View.INVISIBLE);
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
-        ft.add(R.id.fragment_content, CameraFragment.newInstance());
+        ft.add(R.id.fragment_content, Camera.newInstance());
         ft.commit();
         setSupportActionBar(toolbar);
         DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
@@ -73,7 +74,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             FragmentTransaction ft1 = fm.beginTransaction();
             ft1.replace(R.id.fragment_content, new ProfileFragment());
             ft1.commit();
-            DrawerLayout drawerLayout1 = (DrawerLayout) findViewById(R.id.drawerLayout);
+            DrawerLayout drawerLayout1 = findViewById(R.id.drawerLayout);
             drawerLayout1.closeDrawer(GravityCompat.START);
         });
         auth = Connection.getFirebaseAuth();
@@ -132,14 +133,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else if (id == R.id.nav_item_one) {
             FragmentManager fm = getSupportFragmentManager();
             FragmentTransaction ft = fm.beginTransaction();
-            ft.replace(R.id.fragment_content, new CameraFragment());
+            ft.replace(R.id.fragment_content, new Camera());
             ft.commit();
         } else if (id == R.id.nav_item_two) {
 
         } else if (id == R.id.nav_item_seven) {
             logout();
         }
-        DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
+        DrawerLayout drawerLayout = findViewById(R.id.drawerLayout);
         drawerLayout.closeDrawer(GravityCompat.START);
         return true;
     }

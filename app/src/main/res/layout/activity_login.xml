@@ -6,6 +6,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/back_oficial"
     android:padding="10dp">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -32,7 +33,8 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
-            android:fontFamily="sans-serif-black"
+            android:textColor="@color/registry_color"
+            android:fontFamily="@font/msemibold"
             android:text="Login"
             android:textSize="30sp" />
 
@@ -41,16 +43,20 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginVertical="20dp"
-            android:fontFamily="sans-serif"
+            android:textColor="@color/registry_color"
+            android:fontFamily="@font/mlight"
             android:hint="@string/login_info"
+            android:textColorHint="@color/registry_color"
             android:textSize="@dimen/fontRegistry" />
 
         <EditText
             android:id="@+id/senha"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fontFamily="sans-serif"
+            android:textColor="@color/registry_color"
+            android:fontFamily="@font/mlight"
             android:hint="@string/senha_info"
+            android:textColorHint="@color/registry_color"
             android:inputType="textPassword"
             android:textSize="@dimen/fontRegistry" />
 
@@ -59,6 +65,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginVertical="20dp"
+            android:fontFamily="@font/msemibold"
             android:layout_marginTop="10dp"
             android:onClick="entrar"
             android:text="@string/entrar" />
@@ -69,6 +76,8 @@
             android:layout_height="wrap_content"
             android:text="@string/esqueci_minha_senha"
             android:onClick="forgotPassword"
+            android:textColor="@color/registry_color"
+            android:fontFamily="@font/msemibold"
             android:textSize="@dimen/fontRegistry" />
 
 
@@ -77,6 +86,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:onClick="novoUsuario"
+            android:textColor="@color/registry_color"
+            android:fontFamily="@font/msemibold"
             android:layout_marginVertical="10dp"
             android:text="@string/novo_usuario"
             android:textSize="@dimen/fontRegistry" />

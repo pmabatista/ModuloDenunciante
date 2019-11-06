@@ -26,26 +26,22 @@ import android.hardware.camera2.params.StreamConfigurationMap;
 import android.media.CamcorderProfile;
 import android.media.MediaRecorder;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.provider.Settings;
 import android.util.Log;
 import android.util.Size;
 import android.util.SparseIntArray;
+import android.view.MotionEvent;
 import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
-
-import com.googlecode.tesseract.android.TessBaseAPI;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
@@ -55,13 +51,7 @@ import com.sirint.registrodeinfracoes.R;
 import com.sirint.registrodeinfracoes.camera.texture.AutoFitTextureView;
 import com.sirint.registrodeinfracoes.ui.BaseFragment;
 
-import org.jcodec.api.FrameGrab;
-import org.jcodec.api.JCodecException;
-import org.jcodec.common.AndroidUtil;
-import org.jcodec.common.io.NIOUtils;
-import org.jcodec.common.model.Picture;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -78,6 +68,8 @@ public abstract class CameraVideoFragment extends BaseFragment {
     private static final SparseIntArray INVERSE_ORIENTATIONS = new SparseIntArray();
     private static final SparseIntArray DEFAULT_ORIENTATIONS = new SparseIntArray();
     private Context context;
+    public float finger_spacing = 0;
+    public int zoom_level = 1;
 
     static {
         INVERSE_ORIENTATIONS.append(Surface.ROTATION_270, 0);
@@ -102,8 +94,6 @@ public abstract class CameraVideoFragment extends BaseFragment {
     protected float maximumZoomLevel;
     protected Rect zoom;
     List<String> files = new ArrayList<>();
-    private float finger_spacing = 0;
-    private int zoom_level = 1;
     /**
      * An {@link AutoFitTextureView} for camera preview.
      */
@@ -180,6 +170,8 @@ public abstract class CameraVideoFragment extends BaseFragment {
         }
 
     };
+
+
     /**
      * {@link TextureView.SurfaceTextureListener} handles several lifecycle events on a
      * {@link TextureView}.
@@ -220,12 +212,12 @@ public abstract class CameraVideoFragment extends BaseFragment {
      */
     private static Size chooseVideoSize(Size[] choices) {
         for (Size size : choices) {
-            if (1920 == size.getWidth() && 1080 == size.getHeight()) {
+            if (1280 == size.getWidth() && 720 == size.getHeight()) {
                 return size;
             }
         }
         for (Size size : choices) {
-            if (size.getWidth() == size.getHeight() * 4 / 3 && size.getWidth() <= 1080) {
+            if (size.getWidth() == size.getHeight() * 4 / 3 && size.getWidth() <= 1280) {
                 return size;
             }
         }
@@ -676,6 +668,66 @@ public abstract class CameraVideoFragment extends BaseFragment {
     protected void setUp(View view) {
 
     }
+    /*
+    public boolean ZoomByCamera(MotionEvent event, View view){
+        try {
+            Activity activity = getActivity();
+            CameraManager manager = (CameraManager) activity.getSystemService(Context.CAMERA_SERVICE);
+            CameraCharacteristics characteristics = manager.getCameraCharacteristics(mCameraId);
+            float maxzoom = (characteristics.get(CameraCharacteristics.SCALER_AVAILABLE_MAX_DIGITAL_ZOOM))*10;
+
+            Rect m = characteristics.get(CameraCharacteristics.SENSOR_INFO_ACTIVE_ARRAY_SIZE);
+            int action = event.getAction();
+            float current_finger_spacing;
+
+            if (event.getPointerCount() > 1) {
+                // Multi touch logic
+                current_finger_spacing = getFingerSpacing(event);
+                if(finger_spacing != 0){
+                    if(current_finger_spacing > finger_spacing && maxzoom > zoom_level){
+                        zoom_level++;
+                    } else if (current_finger_spacing < finger_spacing && zoom_level > 1){
+                        zoom_level--;
+                    }
+                    int minW = (int) (m.width() / maxzoom);
+                    int minH = (int) (m.height() / maxzoom);
+                    int difW = m.width() - minW;
+                    int difH = m.height() - minH;
+                    int cropW = difW /100 *(int)zoom_level;
+                    int cropH = difH /100 *(int)zoom_level;
+                    cropW -= cropW & 3;
+                    cropH -= cropH & 3;
+                    Rect zoom = new Rect(cropW, cropH, m.width() - cropW, m.height() - cropH);
+                    mPreviewBuilder.set(CaptureRequest.SCALER_CROP_REGION, zoom);
+                }
+                finger_spacing = current_finger_spacing;
+            } else{
+                if (action == MotionEvent.ACTION_UP) {
+                    //single touch logic
+                }
+            }
+
+            try {
+                mPreviewSession
+                        .setRepeatingRequest(mPreviewBuilder.build(), m, null);
+            } catch (CameraAccessException e) {
+                e.printStackTrace();
+            } catch (NullPointerException ex) {
+                ex.printStackTrace();
+            }
+        } catch (CameraAccessException e) {
+            throw new RuntimeException("can not access camera.", e);
+        }
+        return true;
+    }*/
+
+    @SuppressWarnings("deprecation")
+    private float getFingerSpacing(MotionEvent event) {
+        float x = event.getX(0) - event.getX(1);
+        float y = event.getY(0) - event.getY(1);
+        return (float) Math.sqrt(x * x + y * y);
+    }
+
 
     static class CompareSizesByArea implements Comparator<Size> {
 
@@ -685,6 +737,8 @@ public abstract class CameraVideoFragment extends BaseFragment {
             return Long.signum((long) lhs.getWidth() * lhs.getHeight() -
                     (long) rhs.getWidth() * rhs.getHeight());
         }
-
     }
+
+
+
 }

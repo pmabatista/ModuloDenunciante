@@ -1,6 +1,7 @@
 package com.sirint.registrodeinfracoes;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,16 +16,20 @@ public class Denuncia {
     private String marcaVeiculo;
     private String especieVeiculo;
     private String denúncia;
+    private String data;
+    private String status;
     List<String> provas = new ArrayList<>();
 
 
-    public Denuncia(String placaVeiculo, String indLocal, String indInfracao, String observação, String marcaVeiculo, String especieVeiculo) {
+    public Denuncia(String placaVeiculo, String indLocal, String indInfracao, String observação, String marcaVeiculo, String especieVeiculo, String data, String status) {
         this.placaVeiculo = placaVeiculo;
         this.indLocal = indLocal;
         this.indInfracao = indInfracao;
         this.observação = observação;
         this.marcaVeiculo = marcaVeiculo;
         this.especieVeiculo = especieVeiculo;
+        this.data = data;
+        this.status = status;
     }
 
     public String getPlacaVeiculo() {
@@ -75,6 +80,22 @@ public class Denuncia {
         this.especieVeiculo = especieVeiculo;
     }
 
+    public String getData() {
+        return data;
+    }
+
+    public void setData(String data) {
+        this.data = data;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
     public List<String> getProvas() {
         return provas;
     }
@@ -82,6 +103,8 @@ public class Denuncia {
     public void setProvas(List<String> provas) {
         this.provas = provas;
     }
+
+
 
     public Map<String, Object> toMap() {
         HashMap<String, Object> result = new HashMap<>();
@@ -91,7 +114,8 @@ public class Denuncia {
         result.put("indLocal", indLocal);
         result.put("indInfracao", indInfracao);
         result.put("observacao", observação);
-
+        result.put("data", data);
+        result.put("status", status);
         return result;
     }
 }

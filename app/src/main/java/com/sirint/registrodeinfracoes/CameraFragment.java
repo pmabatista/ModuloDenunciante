@@ -20,7 +20,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 
-public class CameraFragment extends CameraVideoFragment {
+public class CameraFragment extends CameraVideoFragment{
 
 
     @BindView(R.id.mTextureView)
@@ -35,6 +35,7 @@ public class CameraFragment extends CameraVideoFragment {
     ImageView mRegistrar;
     Unbinder unbinder;
     private Context context;
+
 
     private String mOutputFilePath;
 
@@ -86,6 +87,7 @@ public class CameraFragment extends CameraVideoFragment {
     protected void setUp(View view) {
 
     }
+
 
     @OnClick({R.id.mRecordVideo, R.id.mPlayVideo, R.id.mRegistrar})
     public void onViewClicked(View view) {
@@ -154,4 +156,7 @@ public class CameraFragment extends CameraVideoFragment {
         super.onDestroyView();
         unbinder.unbind();
     }
+
+
+
 }
