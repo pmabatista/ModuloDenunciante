@@ -19,6 +19,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 
@@ -115,24 +116,42 @@ public class RegistryActivity extends Activity implements IGetUrl {
     private void consultar() throws IOException {
         SinespApi sinespApi = new SinespApi();
         String placa = editPlacaVeiculo.getText().toString().trim();
-        Result result = sinespApi.Consulta(fToken, placa);
-        int i = result.getModel().indexOf("/");
-        String modeloVeiculo = result.getModel().substring((i+1),result.getModel().length());
-        String marcaVeiculo= result.getModel().substring(0,(i));
-        String situacao = result.getStatusMessage();
-        if(situacao.contains("Sem")){
-            situacao = "Sem restrições";
-            txtSituacaoVeiculo.setTextColor(Color.GREEN);
-        }else{
-            situacao = "Com restrições";
-            txtSituacaoVeiculo.setTextColor(Color.RED);
+        int tamanhoPlaca = placa.length();
+        if(placa != null && tamanhoPlaca == 7) {
+            Result result = sinespApi.Consulta(fToken, placa);
+            if(result.getReturnCode() != 3 && result.getReturnCode() != 1) {
+                System.out.println(result.getReturnCode());
+                int i = result.getModel().indexOf("/");
+                String modeloVeiculo = result.getModel().substring((i + 1));
+                String marcaVeiculo = result.getModel().substring(0, (i));
+                String situacao = result.getStatusMessage();
+                if (situacao.contains("Sem")) {
+                    situacao = "Sem restrições";
+                    txtSituacaoVeiculo.setTextColor(Color.GREEN);
+                } else {
+                    situacao = "Com restrições";
+                    txtSituacaoVeiculo.setTextColor(Color.RED);
 
+                }
+                editMarcaVeiculo.setText(marcaVeiculo);
+                editModeloVeiculo.setText(modeloVeiculo);
+                txtSituacaoVeiculo.setText(situacao);
+                editMarcaVeiculo.setFocusableInTouchMode(false);
+                editModeloVeiculo.setFocusable(false);
+            }
+            else{
+                Toast.makeText(getApplicationContext(),"Veiculo não econtrado", Toast.LENGTH_LONG);
+                editMarcaVeiculo.setText("");
+                editModeloVeiculo.setText("");
+                txtSituacaoVeiculo.setText("Situação");
+            }
+
+        }else{
+            Toast.makeText(getApplicationContext(),"Placa incorreta", Toast.LENGTH_LONG);
+            editMarcaVeiculo.setText("");
+            editModeloVeiculo.setText("");
+            txtSituacaoVeiculo.setText("Situação");
         }
-        editMarcaVeiculo.setText(marcaVeiculo);
-        editModeloVeiculo.setText(modeloVeiculo);
-        txtSituacaoVeiculo.setText(situacao);
-        editMarcaVeiculo.setFocusableInTouchMode(false);
-        editModeloVeiculo.setFocusable(false);
         onProgressBar(false);
     }
 
@@ -211,8 +230,6 @@ public class RegistryActivity extends Activity implements IGetUrl {
             onProgressBar(true);
             mStorageRef = FirebaseStorage.getInstance().getReference();
             Uri file = Uri.fromFile(new File(uri));
-            File hash = new File(uri);
-            hashes.add(gerarHash(hash));
             String path = uri;
             // Create the file metadata
             StorageMetadata metadata = new StorageMetadata.Builder()
@@ -234,6 +251,11 @@ public class RegistryActivity extends Activity implements IGetUrl {
                     String url = uri1.toString();
                     System.out.println(url);
                     urls.add(url);
+                    int tokenPosition = 0;
+                    tokenPosition = url.lastIndexOf("=");
+                    String tokenVideo = "";
+                    tokenVideo = url.substring(tokenPosition+1);
+                    hashes.add(tokenVideo);
                     File arquivo = new File(path);
                     arquivo.delete();
                     if (urls.size() == links.size()) {
@@ -264,19 +286,24 @@ public class RegistryActivity extends Activity implements IGetUrl {
         String indLocal = editIndLocal.getText().toString().trim();
         String indInfracao = editIndInfracao.getText().toString().trim();
         String observacoes = editObservacoes.getText().toString().trim();
-        String key = ref.child("denuncias").push().getKey();
-        Denuncia denuncia = new Denuncia(placaVeiculo, indLocal, indInfracao, observacoes, marcaVeiculo, modeloVeiculo, getDateTime(), status);
-        Map<String, Object> denunciaValues = denuncia.toMap();
-        Map<String, Object> childUpdates = new HashMap<>();
-        childUpdates.put("modulousuario/denuncias/" + key, denunciaValues);
-        ref.updateChildren(childUpdates);
-        Map<String, Object> provaUpdates = new HashMap<>();
-        for (String s : urls) {
-            for(String f : hashes)
-            provaUpdates.put(f, s);
+        if(placaVeiculo != null && marcaVeiculo !=null && modeloVeiculo != null && indLocal != null && indInfracao != null) {
+            String key = ref.child("denuncias").push().getKey();
+            Denuncia denuncia = new Denuncia(placaVeiculo, indLocal, indInfracao, observacoes, marcaVeiculo, modeloVeiculo, getDateTime(), status, user.getUid());
+            Map<String, Object> denunciaValues = denuncia.toMap();
+            Map<String, Object> childUpdates = new HashMap<>();
+            childUpdates.put("modulousuario/denuncias/" + key, denunciaValues);
+            ref.updateChildren(childUpdates);
+            Map<String, Object> provaUpdates = new HashMap<>();
+            for (String s : urls) {
+                for (String f : hashes)
+                    provaUpdates.put(f, s);
+            }
+            ref.child("modulousuario/denuncias/" + key + "/provas").updateChildren(provaUpdates);
+            onProgressBar(false);
         }
-        ref.child("modulousuario/denuncias/" + key + "/provas").updateChildren(provaUpdates);
-        onProgressBar(false);
+        else{
+            Toast.makeText(getApplicationContext(), "Favor preencher todos os dados", Toast.LENGTH_LONG);
+        }
 
     }
 

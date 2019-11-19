@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
 
     <com.wonderkiln.camerakit.CameraView
         android:id="@+id/camera"
@@ -12,42 +13,31 @@
         android:layout_height="0dp"
         android:adjustViewBounds="true"
         android:keepScreenOn="true"
-        app:cameraPlaySounds="false"
-        app:cameraGestureTap="focusWithMarker"
-        app:cameraGesturePinch="zoom"
-        app:cameraGestureScrollHorizontal="exposureCorrection"
-        app:cameraFacing="back"
-        app:cameraFlash="off"
-        app:cameraAudio="on"
-        app:cameraSessionType="video"
+        app:ckDoubleTapToToggleFacing ="true"
+        app:ckLockVideoAspectRatio = "true"
+        app:ckFlash = "auto"
+        app:ckFocus = "tapWithMarker"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent" >
+
+
+
+    </com.wonderkiln.camerakit.CameraView>
 
     <ImageView
-        android:id="@+id/flash"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_flash_off"
+        android:id="@+id/preview"
+        android:layout_width="85sp"
+        android:layout_height="85sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.880"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/mRecordVideo"
+        app:layout_constraintStart_toStartOf="@+id/camera"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.05" />
+        app:layout_constraintHorizontal_bias="0.300"
+        app:layout_constraintVertical_bias="0.960"
+        />
 
-    <ImageView
-        android:id="@+id/change_cam"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/change_cam"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.948"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.15" />
 
     <ImageView
         android:id="@+id/mRegistrar"

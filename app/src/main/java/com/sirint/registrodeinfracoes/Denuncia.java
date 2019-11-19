@@ -18,10 +18,11 @@ public class Denuncia {
     private String denúncia;
     private String data;
     private String status;
+    private String denunciante;
     List<String> provas = new ArrayList<>();
 
 
-    public Denuncia(String placaVeiculo, String indLocal, String indInfracao, String observação, String marcaVeiculo, String especieVeiculo, String data, String status) {
+    public Denuncia(String placaVeiculo, String indLocal, String indInfracao, String observação, String marcaVeiculo, String especieVeiculo, String data, String status, String denunciante) {
         this.placaVeiculo = placaVeiculo;
         this.indLocal = indLocal;
         this.indInfracao = indInfracao;
@@ -30,6 +31,7 @@ public class Denuncia {
         this.especieVeiculo = especieVeiculo;
         this.data = data;
         this.status = status;
+        this.denunciante = denunciante;
     }
 
     public String getPlacaVeiculo() {
@@ -116,6 +118,7 @@ public class Denuncia {
         result.put("observacao", observação);
         result.put("data", data);
         result.put("status", status);
+        result.put("denunciante", denunciante);
         return result;
     }
 }

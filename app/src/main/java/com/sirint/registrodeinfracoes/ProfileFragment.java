@@ -20,15 +20,23 @@ import androidx.fragment.app.Fragment;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.Unbinder;
 
 public class ProfileFragment extends Fragment {
 
+    @BindView(R.id.txt_usuario)
     TextView textLogin;
+    @BindView(R.id.txt_id)
     TextView textID;
+    @BindView(R.id.status_email)
     TextView status_email;
     private FirebaseUser user = Connection.getFirebaseUser();
     private boolean email_verificado;
+    Unbinder unbinder;
     final FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference ref = database.getReference();
     SharedPreferences sharedPreferences;
@@ -38,18 +46,11 @@ public class ProfileFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
-        inicializarcomponentes(view);
+        unbinder = ButterKnife.bind(this, view);
         verificarPreferences();
         //checkStatusEmail();
         return view;
     }
-
-    public void inicializarcomponentes(View view){
-        textLogin = (TextView) view.findViewById(R.id.txt_usuario);
-        textID = (TextView) view.findViewById(R.id.txt_id);
-        status_email = (TextView) view.findViewById(R.id.status_email);
-    }
-
 
     @Override
     public void onStart() {

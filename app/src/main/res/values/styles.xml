@@ -22,4 +22,10 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+    <style name="SirintTheme">
+        <item name="colorControlNormal">#FFF</item>
+        <item name="colorControlActivated">#FFF</item>
+        <item name="colorControlHighlight">@color/accent_material_light</item>
+    </style>
+
 </resources>

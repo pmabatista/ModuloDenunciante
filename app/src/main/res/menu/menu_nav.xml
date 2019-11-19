@@ -8,8 +8,8 @@
             />
         <item
             android:id="@+id/nav_item_two"
-            android:icon="@android:drawable/ic_menu_manage"
-            android:title="Configurações" />
+            android:icon="@android:drawable/ic_search_category_default"
+            android:title="Consulta de Denúncia" />
         <item
             android:id="@+id/nav_item_six"
             android:icon="@android:drawable/ic_menu_help"

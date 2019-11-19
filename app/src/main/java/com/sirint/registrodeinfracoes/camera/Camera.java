@@ -1,7 +1,9 @@
 package com.sirint.registrodeinfracoes.camera;
 
+import android.Manifest;
 import android.content.Intent;
-import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.media.MediaMetadataRetriever;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.LayoutInflater;
@@ -13,11 +15,21 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.MultiplePermissionsReport;
+import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
+import com.sirint.registrodeinfracoes.ConsultaFragment;
+import com.sirint.registrodeinfracoes.MainActivity;
+import com.sirint.registrodeinfracoes.PreviewFragment;
 import com.sirint.registrodeinfracoes.R;
 import com.sirint.registrodeinfracoes.RegistryActivity;
-import com.wonderkiln.camerakit.CameraKit;
 import com.wonderkiln.camerakit.CameraView;
-import com.wonderkiln.camerakit.Facing;
+
 
 import java.io.File;
 import java.io.Serializable;
@@ -37,10 +49,10 @@ public class Camera extends Fragment {
     ImageView mRecordVideo;
     @BindView(R.id.mRegistrar)
     ImageView mRegistrar;
+    @BindView(R.id.preview)
+    ImageView preview;
     private boolean capturing = false;
     private String video;
-    private boolean hasFlash;
-    private ImageView flashIcon;
     List<String> files = new ArrayList<>();
     Unbinder unbinder;
 
@@ -52,9 +64,6 @@ public class Camera extends Fragment {
 
     public void onViewCreated(final View view, Bundle savedInstanceState) {
         cameraKitView = (CameraView) view.findViewById(R.id.camera);
-        flashIcon = (ImageView) view.findViewById(R.id.flash);
-        checkFlash();
-
     }
 
     public static Camera newInstance() {
@@ -69,15 +78,14 @@ public class Camera extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
+        requestPermission();
         cameraKitView.start();
-        checkFlash();
     }
 
     @Override
     public void onResume() {
         super.onResume();
         cameraKitView.start();
-        checkFlash();
     }
 
     @Override
@@ -97,7 +105,7 @@ public class Camera extends Fragment {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
-    @OnClick({R.id.mRecordVideo, R.id.mRegistrar, R.id.flash, R.id.change_cam})
+    @OnClick({R.id.mRecordVideo, R.id.mRegistrar, R.id.preview})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.mRecordVideo:
@@ -116,11 +124,16 @@ public class Camera extends Fragment {
                 } else {
                 }
                 break;
-            case R.id.flash:
-                changeFlash(view);
+            case R.id.preview:
+                Fragment fragment = new PreviewFragment();
+                Bundle args = new Bundle();
+                args.putSerializable("Links", (Serializable) getFiles());
+                fragment.setArguments(args);
+                FragmentManager fm = getActivity().getSupportFragmentManager();
+                FragmentTransaction ft = fm.beginTransaction();
+                ft.add(R.id.fragment_content, fragment);
+                ft.commit();
                 break;
-            case R.id.change_cam:
-                rotateCamera(view);
         }
     }
 
@@ -142,69 +155,35 @@ public class Camera extends Fragment {
         mRecordVideo.setImageDrawable(getResources().getDrawable(R.drawable.ic_record));
         capturing = false;
         files.add(video);
+        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+        retriever.setDataSource(video);
+        Bitmap bitmap = retriever.getFrameAtTime(1000);
+        preview.setImageBitmap(bitmap);
     }
 
-    public void rotateCamera(View view) {
-        if (capturing){
-            Toast.makeText(getContext(), "Can't rotate Camera during recording !", Toast.LENGTH_SHORT).show();
-        } else  {
 
-            if (cameraKitView.getFacing() == CameraKit.Constants.FACING_BACK){
-                cameraKitView.setFacing(CameraKit.Constants.FACING_FRONT);
+    public void requestPermission() {
+        Dexter.withActivity(getActivity()).withPermissions(Manifest.permission.CAMERA,
+                Manifest.permission.RECORD_AUDIO,
+                Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.ACCESS_FINE_LOCATION)
+                .withListener(new MultiplePermissionsListener() {
+                    @Override
+                    public void onPermissionsChecked(MultiplePermissionsReport report) {
+                        // check if all permissions are granted or not
+                    }
+                    @Override
 
-            }else {
-                cameraKitView.setFacing(CameraKit.Constants.FACING_BACK);
-
-            }
-        }
-
+                    public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
+                        token.continuePermissionRequest();
+                    }
+                }).withErrorListener(error -> Toast.makeText(getActivity().getApplicationContext(), "Error occurred! ", Toast.LENGTH_SHORT).show())
+                .onSameThread()
+                .check();
     }
 
-    private void checkFlash() {
-
-        hasFlash = getContext().getPackageManager()
-                .hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH);
-
-        if (!hasFlash) {
-
-            Toast.makeText(getContext(), "Flash not supported on this device !", Toast.LENGTH_SHORT).show();
-            flashIcon.setVisibility(View.GONE);
-
-        } else {
-
-            flashIcon.setVisibility(View.VISIBLE);
-            if (cameraKitView.getFlash()== CameraKit.Constants.FLASH_ON) {
-                flashIcon.setImageDrawable(getResources().getDrawable(R.drawable.ic_flash_auto));
-                cameraKitView.setFlash(CameraKit.Constants.FLASH_AUTO);
-            } else if (cameraKitView.getFlash() == CameraKit.Constants.FLASH_AUTO) {
-                flashIcon.setImageDrawable(getResources().getDrawable(R.drawable.ic_flash_off));
-                cameraKitView.setFlash(CameraKit.Constants.FLASH_OFF);
-            } else {
-                flashIcon.setImageDrawable(getResources().getDrawable(R.drawable.ic_flash_on));
-                cameraKitView.setFlash(CameraKit.Constants.FLASH_ON);
-            }
-        }
-
-    }
-
-    public void changeFlash(View view) {
-
-        if (capturing){
-            Toast.makeText(getContext(), "Can't change flash mode during recording !", Toast.LENGTH_SHORT).show();
-        } else {
-            if (cameraKitView.getFlash()== CameraKit.Constants.FLASH_ON) {
-                flashIcon.setImageDrawable(getResources().getDrawable(R.drawable.ic_flash_auto));
-                cameraKitView.setFlash(CameraKit.Constants.FLASH_AUTO);
-            } else if (cameraKitView.getFlash() == CameraKit.Constants.FLASH_AUTO) {
-                flashIcon.setImageDrawable(getResources().getDrawable(R.drawable.ic_flash_off));
-                cameraKitView.setFlash(CameraKit.Constants.FLASH_OFF);
-
-            } else {
-                flashIcon.setImageDrawable(getResources().getDrawable(R.drawable.ic_flash_on));
-                cameraKitView.setFlash(CameraKit.Constants.FLASH_ON);
-            }
-        }
 
 
-    }
 }

@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/back_oficial"
     android:padding="2dp"
+    android:theme="@style/SirintTheme"
     tools:context="com.sirint.registrodeinfracoes.RegistryActivity">
 
     <ImageView
@@ -75,7 +76,9 @@
             android:layout_marginBottom="8dp"
             android:imeOptions="actionNext"
             android:inputType="textCapCharacters|textImeMultiLine"
-            android:maxLength="30"
+            android:maxLength="7"
+            android:hint="AAA0000"
+            android:textColorHint="@color/hintcolor"
             android:textSize="@dimen/fontRegistry"
             android:fontFamily="@font/mlight"
             android:textColor="@color/registry_color"/>
@@ -164,8 +167,7 @@
             android:layout_marginBottom="8dp"
             android:inputType="textCapCharacters|textImeMultiLine"
             android:linksClickable="true"
-            android:maxLength="60"
-            android:onClick="mapa"
+            android:maxLength="200"
             android:fontFamily="@font/mlight"
             android:textColor="@color/registry_color"
             android:textSize="@dimen/fontRegistry"
@@ -194,8 +196,8 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
-            android:inputType="textCapCharacters|textImeMultiLine"
-            android:maxLength="30"
+            android:inputType="textImeMultiLine"
+            android:maxLength="200"
             android:textSize="@dimen/fontRegistry"
             android:fontFamily="@font/mlight"
             android:textColor="@color/registry_color"/>
@@ -225,8 +227,8 @@
             android:layout_marginBottom="8dp"
             android:ems="10"
             android:gravity="start|top"
-            android:inputType="textCapCharacters|textImeMultiLine"
-            android:maxLength="50"
+            android:inputType="textImeMultiLine"
+            android:maxLength="400"
             android:fontFamily="@font/mlight"
             android:textSize="@dimen/fontRegistry"
             android:textColor="@color/registry_color"/>

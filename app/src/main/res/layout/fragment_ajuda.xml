@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".AjudaFragment"
+    android:background="@drawable/back_oficial">
+
+    <TextView
+        android:fontFamily="@font/msemibold"
+        android:paddingHorizontal="10sp"
+        android:paddingVertical="5sp"
+        android:textColor="@color/registry_color"
+        android:textSize="16sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="\nAqui está um tutorial para você que está pronto para realizar denúncias e ajudar os orgãos de trânsito\n
+\nPara realizar a denúncia você deverera seguir alguns passos:
+\n\n1º Passo: Você deverá gravar o vídeo da infração que deseja denunciar, com direito a 3 vídeos por denúncia, lembre-se que os vídeos devem conter obrigatoriamente a placa do veículo de forma visível.
+\n\nComandos básicos da gravação do vídeo:
+ \n\nDois cliques na tela: Trocar câmera.
+ \n\nGesto pinça na tela: Zoom câmera.
+ \n\nUm toque: Foco câmera.
+\n\n2º Passo: Após a gravação do vídeo, você irá clicar no botão prosseguir, e informar a placa do veículo, o aplicativo consultará o veículo e trazerá as informações do mesmo.
+\n\n3º Passo: Informar os dados da infração, e também alguma informação adicional através do campo observação, lembre-se de descrever bem o que aconteceu, cada detalhe será importante para que a denúncia seja aprovada.
+\n\n4º Passo: Por fim clicar no botão prosseguir e esperar que a gravação da denúncia seja feita.
+
+\n\nPronto, você realizou a sua denúncia com sucesso.
+
+Se tiver com algum problema ou erro, entre em contato atráves do e-mail sirint@gmail.com. " />
+
+</ScrollView>

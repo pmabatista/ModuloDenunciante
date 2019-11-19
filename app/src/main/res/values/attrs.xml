@@ -17,4 +17,6 @@
 <resources>
   <declare-styleable name="ViewfinderView">
   </declare-styleable>
+
+    
 </resources>

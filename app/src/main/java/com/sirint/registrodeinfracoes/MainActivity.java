@@ -17,6 +17,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -57,7 +58,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         toolbar.setVisibility(View.INVISIBLE);
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
-        ft.add(R.id.fragment_content, Camera.newInstance());
+        ft.add(R.id.fragment_content, Camera.newInstance(),"Camera");
         ft.commit();
         setSupportActionBar(toolbar);
         DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
@@ -72,7 +73,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         txt_nome = headerLayout.findViewById(R.id.txt_nav_nome);
         layoutHeader.setOnClickListener(v -> {
             FragmentTransaction ft1 = fm.beginTransaction();
-            ft1.replace(R.id.fragment_content, new ProfileFragment());
+            ft1.add(R.id.fragment_content, new ProfileFragment(), "Perfil");
             ft1.commit();
             DrawerLayout drawerLayout1 = findViewById(R.id.drawerLayout);
             drawerLayout1.closeDrawer(GravityCompat.START);
@@ -129,15 +130,35 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         int id = item.getItemId();
 
         if (id == R.id.nav_item_six) {
-            // Handle the camera action
+            FragmentManager fm = getSupportFragmentManager();
+            FragmentTransaction ft = fm.beginTransaction();
+            ft.add(R.id.fragment_content, new AjudaFragment(), "Ajuda");
+            ft.commit();
         } else if (id == R.id.nav_item_one) {
             FragmentManager fm = getSupportFragmentManager();
             FragmentTransaction ft = fm.beginTransaction();
-            ft.replace(R.id.fragment_content, new Camera());
+            Fragment ajuda = fm.findFragmentByTag("Ajuda");
+            Fragment perfil = fm.findFragmentByTag("Perfil");
+            Fragment consulta = fm.findFragmentByTag("Consulta");
+            if (ajuda != null){
+                if(ajuda.isVisible())
+                    ft.remove(ajuda);
+            }if(consulta != null){
+                if(consulta.isVisible())
+                    ft.remove(consulta);
+            }if(perfil != null){
+                if(perfil.isVisible())
+                    ft.remove(perfil);
+            }
             ft.commit();
         } else if (id == R.id.nav_item_two) {
+            FragmentManager fm = getSupportFragmentManager();
+            FragmentTransaction ft = fm.beginTransaction();
+            ft.add(R.id.fragment_content, new ConsultaFragment(), "Consulta");
+            ft.commit();
 
-        } else if (id == R.id.nav_item_seven) {
+        }
+        else if (id == R.id.nav_item_seven) {
             logout();
         }
         DrawerLayout drawerLayout = findViewById(R.id.drawerLayout);
@@ -189,6 +210,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             drawerLayout.closeDrawer(GravityCompat.START);
         } else {
         }
+        if (getSupportFragmentManager().getBackStackEntryCount() > 1 ){
+            getSupportFragmentManager().popBackStack();
+        } else {
+        }
+
     }
 }
 
