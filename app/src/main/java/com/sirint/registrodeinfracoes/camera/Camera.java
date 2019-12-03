@@ -1,19 +1,32 @@
 package com.sirint.registrodeinfracoes.camera;
 
 import android.Manifest;
+import android.app.Dialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.media.AudioManager;
+import android.media.MediaActionSound;
 import android.media.MediaMetadataRetriever;
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.MediaController;
 import android.widget.Toast;
+import android.widget.VideoView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -23,9 +36,6 @@ import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
-import com.sirint.registrodeinfracoes.ConsultaFragment;
-import com.sirint.registrodeinfracoes.MainActivity;
-import com.sirint.registrodeinfracoes.PreviewFragment;
 import com.sirint.registrodeinfracoes.R;
 import com.sirint.registrodeinfracoes.RegistryActivity;
 import com.wonderkiln.camerakit.CameraView;
@@ -55,6 +65,7 @@ public class Camera extends Fragment {
     private String video;
     List<String> files = new ArrayList<>();
     Unbinder unbinder;
+    int pos =0;
 
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.camera, container, false);
@@ -105,12 +116,18 @@ public class Camera extends Fragment {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
+
+
     @OnClick({R.id.mRecordVideo, R.id.mRegistrar, R.id.preview})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.mRecordVideo:
                 if(capturing == false) {
-                    startCapture();
+                    if(getFiles().size() < 3) {
+                        startCapture();
+                    }else{
+                        Toast.makeText(getContext(), "Você já atingiu o limite de vídeos.", Toast.LENGTH_SHORT).show();
+                    }
                 }
                 else {
                     stopCapture();
@@ -122,17 +139,57 @@ public class Camera extends Fragment {
                     intent.putExtra("Links", (Serializable) getFiles());
                     startActivity(intent);
                 } else {
+                    Toast.makeText(getContext(), "Grave pelo menos um vídeo.", Toast.LENGTH_SHORT).show();
                 }
                 break;
             case R.id.preview:
-                Fragment fragment = new PreviewFragment();
-                Bundle args = new Bundle();
-                args.putSerializable("Links", (Serializable) getFiles());
-                fragment.setArguments(args);
-                FragmentManager fm = getActivity().getSupportFragmentManager();
-                FragmentTransaction ft = fm.beginTransaction();
-                ft.add(R.id.fragment_content, fragment);
-                ft.commit();
+                if(files.size()>0) {
+                    pos= 0;
+                    final Dialog dialog = new Dialog(getContext());// add here your class name
+                    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                    dialog.setContentView(R.layout.videoplay);//add your own xml with defied with and height of videoview
+                    dialog.show();
+                    WindowManager.LayoutParams lp = new WindowManager.LayoutParams(
+                            ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                    lp.copyFrom(dialog.getWindow().getAttributes());
+                    dialog.getWindow().setAttributes(lp);
+                    final VideoView videoView = (VideoView) dialog.findViewById(R.id.videoPlay);
+                    final Button mRemover = (Button) dialog.findViewById(R.id.mRemover);
+                    final Button mOk = (Button) dialog.findViewById(R.id.mOk);
+                    final Button mPlay = (Button) dialog.findViewById(R.id.mPlay);
+                    final Button mProximo = (Button) dialog.findViewById(R.id.mProximo);
+                    mOk.setOnClickListener(view1 -> dialog.dismiss());
+                    mRemover.setOnClickListener(view12 -> {
+                        files.remove(getFiles().get(pos));
+                        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+                        retriever.setDataSource(files.get(getFiles().size()-1));
+                        Bitmap bitmap = retriever.getFrameAtTime(1);
+                        preview.setImageBitmap(Bitmap.createScaledBitmap(bitmap, 85, 85, false));
+                        dialog.dismiss();
+                    });
+                    mPlay.setOnClickListener(view13 -> {
+                        if(videoView.isPlaying()){
+                            videoView.pause();
+                        }else{
+                            videoView.start();
+                        }
+                    });
+                    mProximo.setOnClickListener(view14 -> {
+                        if(pos+1 > files.size()-1){
+                            pos = 0;
+                            videoView.setVideoURI(Uri.parse(getFiles().get(pos)));
+                            videoView.start();
+                        }else{
+                            pos++;
+                            videoView.setVideoURI(Uri.parse(getFiles().get(pos)));
+                            videoView.start();
+                        }
+                    });
+                    videoView.setVideoURI(Uri.parse(getFiles().get(pos)));
+                    videoView.start();
+                    MediaController mediaController = new MediaController(getActivity());
+                    videoView.setMediaController(mediaController);
+                }
                 break;
         }
     }
@@ -144,6 +201,7 @@ public class Camera extends Fragment {
         if (!folder.exists()) {
             folder.mkdirs();
         }
+
         cameraKitView.captureVideo(file);
         video = String.valueOf(file);
         mRecordVideo.setImageDrawable(getResources().getDrawable(R.drawable.ic_stop));
@@ -157,8 +215,8 @@ public class Camera extends Fragment {
         files.add(video);
         MediaMetadataRetriever retriever = new MediaMetadataRetriever();
         retriever.setDataSource(video);
-        Bitmap bitmap = retriever.getFrameAtTime(1000);
-        preview.setImageBitmap(bitmap);
+        Bitmap bitmap = retriever.getFrameAtTime(1);
+        preview.setImageBitmap(Bitmap.createScaledBitmap(bitmap, 85, 85, false));
     }
 
 

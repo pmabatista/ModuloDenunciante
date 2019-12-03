@@ -79,9 +79,9 @@ public class ProfileFragment extends Fragment {
         sharedPreferences = getActivity().getSharedPreferences(user.getUid(), Context.MODE_PRIVATE);
         textID.setText(sharedPreferences.getString("nome_usuario", ""));
         textLogin.setText(sharedPreferences.getString("email_usuario", ""));
-        status_email.setText(String.valueOf(sharedPreferences.getBoolean("email_verificado", true)));
-    }
+        email_verificado = (sharedPreferences.getBoolean("email_verificado", true));
 
+    }
 
     public void logout(){
         Connection.logOut();
@@ -91,16 +91,13 @@ public class ProfileFragment extends Fragment {
     }
 
 
-    @OnClick({R.id.status_email,R.id.logout})
+    @OnClick({R.id.status_email})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.status_email:
                 if(!user.isEmailVerified()){
                     user.sendEmailVerification().addOnCompleteListener(task -> Toast.makeText(getContext(),"Email enviado para:" + user.getEmail(),Toast.LENGTH_SHORT).show());
                 }
-                break;
-            case R.id.logout:
-                logout();
                 break;
         }
     }

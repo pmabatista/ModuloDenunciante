@@ -49,18 +49,17 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
+        android:fontFamily="@font/msemibold"
         android:text=""
         android:textAlignment="center"
-        android:textSize="24sp"
         android:textColor="@color/registry_color"
-        android:fontFamily="@font/msemibold"
-        app:layout_constraintBottom_toBottomOf="@+id/logout"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.405" />
+        app:layout_constraintVertical_bias="0.2" />
 
     <TextView
         android:id="@+id/txt_id"
@@ -68,33 +67,18 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
-        android:textAlignment="center"
+        android:fontFamily="@font/msemibold"
         android:text=""
+        android:textAlignment="center"
         android:textColor="@color/registry_color"
-        android:fontFamily="@font/msemibold"
         android:textSize="24sp"
-        app:layout_constraintBottom_toTopOf="@+id/logout"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txt_usuario"
-        app:layout_constraintVertical_bias="0.397" />
 
-    <Button
-        android:id="@+id/logout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="340dp"
-        android:fontFamily="@font/msemibold"
-        android:text="Logout"
-        android:textColor="@color/design_default_color_primary_dark"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txt_usuario"
+        app:layout_constraintVertical_bias="0.082" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -73,7 +73,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         txt_nome = headerLayout.findViewById(R.id.txt_nav_nome);
         layoutHeader.setOnClickListener(v -> {
             FragmentTransaction ft1 = fm.beginTransaction();
-            ft1.add(R.id.fragment_content, new ProfileFragment(), "Perfil");
+            Fragment camera = fm.findFragmentByTag("Camera");
+            ft1.add(R.id.fragment_content, new ProfileFragment(), "Perfil").hide(camera);
             ft1.commit();
             DrawerLayout drawerLayout1 = findViewById(R.id.drawerLayout);
             drawerLayout1.closeDrawer(GravityCompat.START);
@@ -81,6 +82,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         auth = Connection.getFirebaseAuth();
         user = Connection.getFirebaseUser();
         queryDados();
+        verificarUser();
     }
 
     public void criaPreferences(){
@@ -132,14 +134,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (id == R.id.nav_item_six) {
             FragmentManager fm = getSupportFragmentManager();
             FragmentTransaction ft = fm.beginTransaction();
-            ft.add(R.id.fragment_content, new AjudaFragment(), "Ajuda");
+            Fragment camera = fm.findFragmentByTag("Camera");
+            ft.add(R.id.fragment_content, new AjudaFragment(), "Ajuda").hide(camera);
             ft.commit();
         } else if (id == R.id.nav_item_one) {
             FragmentManager fm = getSupportFragmentManager();
             FragmentTransaction ft = fm.beginTransaction();
+            Fragment camera = fm.findFragmentByTag("Camera");
             Fragment ajuda = fm.findFragmentByTag("Ajuda");
             Fragment perfil = fm.findFragmentByTag("Perfil");
             Fragment consulta = fm.findFragmentByTag("Consulta");
+            ft.show(camera);
             if (ajuda != null){
                 if(ajuda.isVisible())
                     ft.remove(ajuda);
@@ -154,7 +159,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else if (id == R.id.nav_item_two) {
             FragmentManager fm = getSupportFragmentManager();
             FragmentTransaction ft = fm.beginTransaction();
-            ft.add(R.id.fragment_content, new ConsultaFragment(), "Consulta");
+            Fragment camera = fm.findFragmentByTag("Camera");
+            ft.add(R.id.fragment_content, new ConsultaFragment(), "Consulta").hide(camera);
             ft.commit();
 
         }

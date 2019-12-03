@@ -1,272 +1,283 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/back_oficial"
-    android:padding="2dp"
-    android:theme="@style/SirintTheme"
-    tools:context="com.sirint.registrodeinfracoes.RegistryActivity">
-
-    <ImageView
-        android:id="@+id/voltar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="voltar"
-        android:src="@drawable/btn_white_back"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/gravar"
-        app:layout_constraintHorizontal_bias="0.06"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout"
-        app:layout_constraintVertical_bias="0.555" />
-
-    <TextView
-        android:id="@+id/situacao"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="24dp"
-        android:fontFamily="@font/msemibold"
-        android:text="Situacao"
-        android:textColor="@color/registry_color"
-        android:textSize="30sp"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.333" />
-
-    <LinearLayout
-        android:id="@+id/linearLayout"
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/scrollView2"
         android:layout_width="match_parent"
-        android:layout_height="509dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toTopOf="@+id/gravar"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/situacao"
-        app:layout_constraintVertical_bias="0.0">
+        android:layout_height="match_parent"
+        android:background="@drawable/back_oficial"
+        android:fillViewport="true">
 
-        <TextView
-            android:id="@+id/txt_placa_veiculo"
+
+
+        <LinearLayout
+            android:id="@+id/linearLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginVertical="@dimen/marginVertical"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
-            android:text="@string/placa_veiculo"
-            android:fontFamily="@font/msemibold"
-            android:textColor="@color/registry_color"
-            android:textSize="@dimen/fontRegistry" />
+            android:orientation="vertical"
+            app:layout_constraintBottom_toTopOf="@+id/situacao"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/gravar"
+            app:layout_constraintVertical_bias="0.0">
 
-        <EditText
-            android:id="@+id/placa_veiculo"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginVertical="@dimen/marginVertical"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
-            android:imeOptions="actionNext"
-            android:inputType="textCapCharacters|textImeMultiLine"
-            android:maxLength="7"
-            android:hint="AAA0000"
-            android:textColorHint="@color/hintcolor"
-            android:textSize="@dimen/fontRegistry"
-            android:fontFamily="@font/mlight"
-            android:textColor="@color/registry_color"/>
-
-        <TextView
-            android:id="@+id/txt_marca_veiculo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginVertical="@dimen/marginVertical"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
-            android:text="@string/marca_veiculo"
-            android:textSize="@dimen/fontRegistry"
-            android:fontFamily="@font/msemibold"
-            android:textColor="@color/registry_color"/>
-
-        <EditText
-            android:id="@+id/marca_veiculo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginVertical="@dimen/marginVertical"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
-            android:inputType="textCapCharacters|textImeMultiLine"
-            android:maxLength="30"
-            android:fontFamily="@font/mlight"
-            android:textSize="@dimen/fontRegistry"
-            android:textColor="@color/registry_color"/>
+            <TextView
+                android:id="@+id/situacao"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"
+                android:fontFamily="@font/msemibold"
+                android:text="Situacao"
+                android:layout_marginTop="10dp"
+                android:layout_gravity="center_horizontal"
+                android:textColor="@color/registry_color"
+                android:textSize="30sp"/>
 
 
-        <TextView
-            android:id="@+id/txt_modelo_veiculo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginVertical="@dimen/marginVertical"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
-            android:text="@string/modelo_veiculo"
-            android:textSize="@dimen/fontRegistry"
-            android:fontFamily="@font/msemibold"
-            android:textColor="@color/registry_color"/>
+            <TextView
+                android:id="@+id/txt_placa_veiculo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="@dimen/marginVertical"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                android:fontFamily="@font/msemibold"
+                android:text="@string/placa_veiculo"
+                android:textColor="@color/registry_color"
+                android:textSize="@dimen/fontRegistry" />
 
-        <EditText
-            android:id="@+id/especie_veiculo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginVertical="@dimen/marginVertical"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
-            android:inputType="textCapCharacters|textImeMultiLine"
-            android:maxLength="30"
-            android:fontFamily="@font/mlight"
-            android:textSize="@dimen/fontRegistry"
-            android:textColor="@color/registry_color"/>
+            <EditText
+                android:id="@+id/placa_veiculo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="@dimen/marginVertical"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:fontFamily="@font/mlight"
+                android:hint="AAA0000"
+                android:imeOptions="actionNext"
+                android:inputType="textCapCharacters|textImeMultiLine"
+                android:maxLength="7"
+                android:nextFocusDown="@id/identificacao_infracao"
+                android:textColor="@color/registry_color"
+                android:textColorHint="@color/hintcolor"
+                android:textSize="@dimen/fontRegistry" />
 
-        <TextView
-            android:id="@+id/txt_identificacao_local"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginVertical="@dimen/marginVertical"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
-            android:text="@string/identificacao_local"
-            android:textSize="@dimen/fontRegistry"
-            android:fontFamily="@font/msemibold"
-            android:textColor="@color/registry_color"/>
+            <TextView
+                android:id="@+id/val_placa"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:fontFamily="@font/mlight"
+                android:text=""
+                android:textColor="@color/com_restricao" />
 
-        <EditText
-            android:id="@+id/identificacao_local"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginVertical="@dimen/marginVertical"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
-            android:inputType="textCapCharacters|textImeMultiLine"
-            android:linksClickable="true"
-            android:maxLength="200"
-            android:fontFamily="@font/mlight"
-            android:textColor="@color/registry_color"
-            android:textSize="@dimen/fontRegistry"
-            />
+            <TextView
+                android:id="@+id/txt_marca_veiculo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="@dimen/marginVertical"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                android:fontFamily="@font/msemibold"
+                android:text="@string/marca_veiculo"
+                android:textColor="@color/registry_color"
+                android:textSize="@dimen/fontRegistry" />
 
-        <TextView
-            android:id="@+id/txt_identificacao_infracao"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginVertical="@dimen/marginVertical"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
-            android:fontFamily="@font/msemibold"
-            android:text="@string/identificacao_infracao"
-            android:textSize="@dimen/fontRegistry"
-            android:textColor="@color/registry_color"/>
-
-        <EditText
-            android:id="@+id/identificacao_infracao"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginVertical="@dimen/marginVertical"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
-            android:inputType="textImeMultiLine"
-            android:maxLength="200"
-            android:textSize="@dimen/fontRegistry"
-            android:fontFamily="@font/mlight"
-            android:textColor="@color/registry_color"/>
-
-        <TextView
-            android:id="@+id/txt_observacoes"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginVertical="@dimen/marginVertical"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
-            android:text="@string/observacoes"
-            android:textSize="@dimen/fontRegistry"
-            android:fontFamily="@font/msemibold"
-            android:textColor="@color/registry_color"/>
-
-        <EditText
-            android:id="@+id/observacoes"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginVertical="@dimen/marginVertical"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
-            android:ems="10"
-            android:gravity="start|top"
-            android:inputType="textImeMultiLine"
-            android:maxLength="400"
-            android:fontFamily="@font/mlight"
-            android:textSize="@dimen/fontRegistry"
-            android:textColor="@color/registry_color"/>
-
-    </LinearLayout>
+            <EditText
+                android:id="@+id/marca_veiculo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="@dimen/marginVertical"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                android:focusable="false"
+                android:fontFamily="@font/mlight"
+                android:inputType="textCapCharacters|textImeMultiLine"
+                android:maxLength="30"
+                android:textColor="@color/registry_color"
+                android:textSize="@dimen/fontRegistry" />
 
 
-    <ImageView
-        android:id="@+id/gravar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="4dp"
-        android:onClick="gravar"
-        android:src="@drawable/btn_white"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.975"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+            <TextView
+                android:id="@+id/txt_modelo_veiculo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="@dimen/marginVertical"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                android:fontFamily="@font/msemibold"
+                android:text="@string/modelo_veiculo"
+                android:textColor="@color/registry_color"
+                android:textSize="@dimen/fontRegistry" />
 
-    <ProgressBar
-        android:id="@+id/progressBar_registro"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        style="@android:style/Widget.Material.Light.ProgressBar.Large"
-        android:visibility="gone"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+            <EditText
+                android:id="@+id/especie_veiculo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="@dimen/marginVertical"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                android:focusable="false"
+                android:fontFamily="@font/mlight"
+                android:inputType="textCapCharacters|textImeMultiLine"
+                android:maxLength="30"
+                android:textColor="@color/registry_color"
+                android:textSize="@dimen/fontRegistry" />
+
+            <TextView
+                android:id="@+id/txt_identificacao_local"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="@dimen/marginVertical"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                android:fontFamily="@font/msemibold"
+                android:text="@string/identificacao_local"
+                android:textColor="@color/registry_color"
+                android:textSize="@dimen/fontRegistry" />
+
+            <EditText
+                android:id="@+id/identificacao_local"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="@dimen/marginVertical"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                android:focusable="false"
+                android:fontFamily="@font/mlight"
+                android:inputType="textCapCharacters|textImeMultiLine"
+                android:linksClickable="true"
+                android:maxLength="200"
+                android:textColor="@color/registry_color"
+                android:textSize="@dimen/fontRegistry" />
+
+            <TextView
+                android:id="@+id/val_local"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:fontFamily="@font/msemibold"
+                android:text="" />
+
+            <TextView
+                android:id="@+id/txt_identificacao_infracao"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="@dimen/marginVertical"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                android:fontFamily="@font/msemibold"
+                android:text="@string/identificacao_infracao"
+                android:textColor="@color/registry_color"
+                android:textSize="@dimen/fontRegistry" />
+
+            <EditText
+                android:id="@+id/identificacao_infracao"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="@dimen/marginVertical"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:fontFamily="@font/mlight"
+                android:imeOptions="actionNext"
+                android:inputType="textImeMultiLine"
+                android:maxLength="200"
+                android:nextFocusDown="@id/observacoes"
+                android:textColor="@color/registry_color"
+                android:textSize="@dimen/fontRegistry" />
+
+            <TextView
+                android:id="@+id/val_infracao"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:fontFamily="@font/msemibold"
+                android:text=""
+                android:textColor="@color/com_restricao" />
+
+            <TextView
+                android:id="@+id/txt_observacoes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="@dimen/marginVertical"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                android:fontFamily="@font/msemibold"
+                android:text="@string/observacoes"
+                android:textColor="@color/registry_color"
+                android:textSize="@dimen/fontRegistry" />
+
+            <EditText
+                android:id="@+id/observacoes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="@dimen/marginVertical"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                android:ems="10"
+                android:fontFamily="@font/mlight"
+                android:gravity="start|top"
+                android:inputType="textImeMultiLine"
+                android:maxLength="400"
+                android:textColor="@color/registry_color"
+                android:textSize="@dimen/fontRegistry" />
+
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="20dp"
+                android:layout_marginTop="10dp">
+
+                <ImageView
+                    android:id="@+id/voltar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start"
+                    android:layout_alignParentBottom="true"
+                    android:onClick="voltar"
+                    android:src="@drawable/btn_white_back" />
+
+                <ImageView
+                    android:id="@+id/gravar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="gravar"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentBottom="true"
+                    android:src="@drawable/btn_white" />
+
+            </RelativeLayout>
+
+        </LinearLayout>
+    </ScrollView>
 
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>

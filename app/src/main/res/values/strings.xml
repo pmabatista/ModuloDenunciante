@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">registrodeinfracoes</string>
+    <string name="app_name">SIRINT</string>
     <string name="permission_request">This sample needs permission for camera and audio recording.</string>
     <string name="record">Gravar</string>
     <string name="stop">Parar</string>

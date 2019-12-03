@@ -2,8 +2,10 @@ package com.sirint.registrodeinfracoes;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.location.Address;
@@ -21,11 +23,20 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 
+import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.common.util.IOUtils;
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResponse;
+import com.google.android.gms.location.SettingsClient;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -63,12 +74,12 @@ import java.util.Map;
 public class RegistryActivity extends Activity implements IGetUrl {
 
     final FirebaseDatabase database = FirebaseDatabase.getInstance();
-    DatabaseReference ref = database.getReference();
+    private DatabaseReference ref = database.getReference();
     private FirebaseAuth auth;
     private FirebaseUser user;
-    List<String> links = new ArrayList<>();
-    List<String> urls = new ArrayList<>();
-    List<String> hashes = new ArrayList<>();
+    private List<String> links = new ArrayList<>();
+    private List<String> urls = new ArrayList<>();
+    private List<String> hashes = new ArrayList<>();
     private EditText editPlacaVeiculo;
     private EditText editModeloVeiculo;
     private EditText editIndLocal;
@@ -76,15 +87,20 @@ public class RegistryActivity extends Activity implements IGetUrl {
     private EditText editObservacoes;
     private EditText editMarcaVeiculo;
     private TextView txtSituacaoVeiculo;
+    private TextView txtValPlaca;
+    private TextView txtValInfracao;
+    private TextView txtValLocal;
     private FusedLocationProviderClient fusedLocationClient;
     private String latitude;
     private String longitude;
+    private static final int REQUEST_CHECK_SETTINGS = 613;
+    private LocationRequest mLocationRequest;
     private String fToken;
     private ProgressBar progressBar;
     private StorageReference mStorageRef;
+    private Boolean validacao;
     private String status = "em aberto";
-    SharedPreferences sharedPreferences;
-
+    private SharedPreferences sharedPreferences;
 
 
     @Override
@@ -98,18 +114,65 @@ public class RegistryActivity extends Activity implements IGetUrl {
         setContentView(R.layout.activity_registry);
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
-        editPlacaVeiculo = (EditText) findViewById(R.id.placa_veiculo);
         //editPlacaVeiculo.addTextChangedListener(MaskEditUtil.mask(editPlacaVeiculo, MaskEditUtil.FORMAT_PLACA));
-        editPlacaVeiculo.setFilters(new InputFilter[]{new InputFilter.AllCaps()});
         inicializaComponentes();
         Intent intent = getIntent();
         links = (List<String>) intent.getSerializableExtra("Links");
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        createLocationRequest();
+        askForLocationChange();
         getLocation();
+        Validação();
         auth = Connection.getFirebaseAuth();
         user = Connection.getFirebaseUser();
-        sharedPreferences = getSharedPreferences(user.getUid(),MODE_PRIVATE);
+        sharedPreferences = getSharedPreferences(user.getUid(), MODE_PRIVATE);
         fToken = sharedPreferences.getString("ftoken_sinesp", "");
+    }
+
+    public void Validação() {
+        if (editIndLocal.getText().toString() == null || editIndLocal.getText().length() < 5) {
+            txtValLocal.setText("OK");
+            txtValLocal.setTextColor(Color.GREEN);
+        } else {
+            txtValLocal.setText("Clique sobre o campo de acima para recebermos sua localização");
+            txtValLocal.setTextColor(Color.RED);
+
+        }
+
+        editPlacaVeiculo.setOnFocusChangeListener((v, hasFocus) -> {
+            if (!hasFocus) { //perdeu o foco
+                try {
+                    consultar();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        editIndInfracao.setOnFocusChangeListener((v, hasFocus) -> {
+            if (!hasFocus) { //perdeu o foco
+                String string = editIndInfracao.getText().toString();
+                if (string == null || string.length() < 11) {
+                    txtValInfracao.setText("Descreva melhor a infração!");
+                    txtValInfracao.setTextColor(Color.RED);
+                    //Toast.makeText(getBaseContext(),"Descreva melhor a infração!",Toast.LENGTH_LONG).show();
+                } else {
+                    txtValInfracao.setTextColor(Color.GREEN);
+                    txtValInfracao.setText("OK");
+                }
+            }
+        });
+        editIndLocal.setOnFocusChangeListener((v, hasFocus) -> {
+            if (!hasFocus) {
+                String string = editIndInfracao.getText().toString();
+                if (string == null || string.length() < 5) {
+                    txtValLocal.setText("Clica sobre o campo de texto acima para recebermos sua localização");
+                    txtValLocal.setTextColor(Color.RED);
+                } else {
+                    txtValLocal.setText("OK");
+                    txtValLocal.setTextColor(Color.GREEN);
+                }
+            }
+        });
     }
 
     @SuppressLint("ResourceAsColor")
@@ -117,10 +180,13 @@ public class RegistryActivity extends Activity implements IGetUrl {
         SinespApi sinespApi = new SinespApi();
         String placa = editPlacaVeiculo.getText().toString().trim();
         int tamanhoPlaca = placa.length();
-        if(placa != null && tamanhoPlaca == 7) {
+        if (placa != null && tamanhoPlaca == 7) {
+            txtValPlaca.setTextColor(Color.GREEN);
+            txtValPlaca.setText("OK");
             Result result = sinespApi.Consulta(fToken, placa);
-            if(result.getReturnCode() != 3 && result.getReturnCode() != 1) {
-                System.out.println(result.getReturnCode());
+            if (result.getReturnCode() != 3 && result.getReturnCode() != 1) {
+                txtValPlaca.setText("OK");
+                txtValPlaca.setTextColor(Color.GREEN);
                 int i = result.getModel().indexOf("/");
                 String modeloVeiculo = result.getModel().substring((i + 1));
                 String marcaVeiculo = result.getModel().substring(0, (i));
@@ -136,23 +202,25 @@ public class RegistryActivity extends Activity implements IGetUrl {
                 editMarcaVeiculo.setText(marcaVeiculo);
                 editModeloVeiculo.setText(modeloVeiculo);
                 txtSituacaoVeiculo.setText(situacao);
-                editMarcaVeiculo.setFocusableInTouchMode(false);
-                editModeloVeiculo.setFocusable(false);
-            }
-            else{
-                Toast.makeText(getApplicationContext(),"Veiculo não econtrado", Toast.LENGTH_LONG);
+            } else {
+                txtValPlaca.setText("Veiculo não econtrado");
+                txtValPlaca.setTextColor(Color.RED);
+                //Toast.makeText(getApplicationContext(), "Veiculo não econtrado", Toast.LENGTH_LONG).show();
                 editMarcaVeiculo.setText("");
                 editModeloVeiculo.setText("");
                 txtSituacaoVeiculo.setText("Situação");
             }
 
-        }else{
-            Toast.makeText(getApplicationContext(),"Placa incorreta", Toast.LENGTH_LONG);
+        } else {
+            txtValPlaca.setText("Placa incorreta");
+            txtValPlaca.setTextColor(Color.RED);
+            //Toast.makeText(getApplicationContext(), "Placa incorreta", Toast.LENGTH_LONG).show();
             editMarcaVeiculo.setText("");
             editModeloVeiculo.setText("");
             txtSituacaoVeiculo.setText("Situação");
         }
-        onProgressBar(false);
+
+        //onProgressBar(false);
     }
 
     @Override
@@ -182,21 +250,20 @@ public class RegistryActivity extends Activity implements IGetUrl {
         editIndLocal = (EditText) findViewById(R.id.identificacao_local);
         editIndInfracao = (EditText) findViewById(R.id.identificacao_infracao);
         editObservacoes = (EditText) findViewById(R.id.observacoes);
-        progressBar = (ProgressBar) findViewById(R.id.progressBar_registro);
+        // progressBar = (ProgressBar) findViewById(R.id.progressBar_registro);
         txtSituacaoVeiculo = (TextView) findViewById(R.id.situacao);
-        editPlacaVeiculo.setOnEditorActionListener((v, actionId, event) -> {
-            if (actionId == EditorInfo.IME_ACTION_NEXT) {
-                try {
-                    hideKeyboard(getApplicationContext(),editPlacaVeiculo);
-                    onProgressBar(true);
-                    consultar();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                return true;
-            }
-            return false;
+        txtValInfracao = (TextView) findViewById(R.id.val_infracao);
+        txtValPlaca = (TextView) findViewById(R.id.val_placa);
+        txtValLocal = (TextView) findViewById(R.id.val_local);
+        editIndLocal.setOnClickListener(view -> {
+            askForLocationChange();
+            getLocation();
         });
+
+
+
+        editPlacaVeiculo.setNextFocusForwardId(R.id.identificacao_infracao);
+        editIndInfracao.setNextFocusDownId(R.id.observacoes);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -204,7 +271,7 @@ public class RegistryActivity extends Activity implements IGetUrl {
         String hash = null;
         try {
             MessageDigest m = MessageDigest.getInstance("MD5");
-            byte [] file = Files.readAllBytes(f.toPath());
+            byte[] file = Files.readAllBytes(f.toPath());
             m.update(file, 0, file.length);
             byte[] digest = m.digest();
             hash = new BigInteger(1, digest).toString(16);
@@ -217,6 +284,11 @@ public class RegistryActivity extends Activity implements IGetUrl {
         return hash;
     }
 
+    public void dialog(){
+        ProgressDialog dialog = ProgressDialog.show(this, "",
+                "Carregando. Seu vídeo está sendo enviado.", true);
+                dialog.show();
+        }
 
     public void onProgressBar(boolean visibility) {
         progressBar.setVisibility(visibility ? View.VISIBLE : View.GONE);
@@ -225,9 +297,8 @@ public class RegistryActivity extends Activity implements IGetUrl {
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void uploadVideo() {
-
+        dialog();
         for (String uri : links) {
-            onProgressBar(true);
             mStorageRef = FirebaseStorage.getInstance().getReference();
             Uri file = Uri.fromFile(new File(uri));
             String path = uri;
@@ -244,22 +315,23 @@ public class RegistryActivity extends Activity implements IGetUrl {
                 System.out.println("Upload is " + progress + "% done");
             }).addOnPausedListener(taskSnapshot -> System.out.println("Upload is paused")).
                     addOnFailureListener(exception -> {
-                // Handle unsuccessful uploads
-            }).addOnSuccessListener(taskSnapshot -> {
+                        // Handle unsuccessful uploads
+                    }).addOnSuccessListener(taskSnapshot -> {
                 // Handle successful uploads on complete
+
                 taskSnapshot.getMetadata().getReference().getDownloadUrl().addOnSuccessListener(uri1 -> {
-                    String url = uri1.toString();
-                    System.out.println(url);
-                    urls.add(url);
                     int tokenPosition = 0;
+                    String url = uri1.toString();
+                    urls.add(url);
                     tokenPosition = url.lastIndexOf("=");
                     String tokenVideo = "";
-                    tokenVideo = url.substring(tokenPosition+1);
+                    tokenVideo = url.substring(tokenPosition + 1);
                     hashes.add(tokenVideo);
                     File arquivo = new File(path);
                     arquivo.delete();
                     if (urls.size() == links.size()) {
                         insertDB();
+
                         try {
                             Thread.sleep(3000);
                             finish();
@@ -286,7 +358,7 @@ public class RegistryActivity extends Activity implements IGetUrl {
         String indLocal = editIndLocal.getText().toString().trim();
         String indInfracao = editIndInfracao.getText().toString().trim();
         String observacoes = editObservacoes.getText().toString().trim();
-        if(placaVeiculo != null && marcaVeiculo !=null && modeloVeiculo != null && indLocal != null && indInfracao != null) {
+        if (placaVeiculo != null && marcaVeiculo != null && modeloVeiculo != null && indLocal != null && indInfracao != null) {
             String key = ref.child("denuncias").push().getKey();
             Denuncia denuncia = new Denuncia(placaVeiculo, indLocal, indInfracao, observacoes, marcaVeiculo, modeloVeiculo, getDateTime(), status, user.getUid());
             Map<String, Object> denunciaValues = denuncia.toMap();
@@ -299,9 +371,7 @@ public class RegistryActivity extends Activity implements IGetUrl {
                     provaUpdates.put(f, s);
             }
             ref.child("modulousuario/denuncias/" + key + "/provas").updateChildren(provaUpdates);
-            onProgressBar(false);
-        }
-        else{
+        } else {
             Toast.makeText(getApplicationContext(), "Favor preencher todos os dados", Toast.LENGTH_LONG);
         }
 
@@ -327,20 +397,18 @@ public class RegistryActivity extends Activity implements IGetUrl {
                         latitude = String.valueOf(location.getLatitude());
                         longitude = String.valueOf(location.getLongitude());
                         try {
-                            List<Address> addresses = geocoder.getFromLocation(Double.valueOf(latitude),Double.valueOf(longitude), 1);
+                            List<Address> addresses = geocoder.getFromLocation(Double.valueOf(latitude), Double.valueOf(longitude), 1);
                             System.out.println(addresses.get(0));
                             address[0] = addresses.get(0).getAddressLine(0);
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
                         editIndLocal.setText(getAddress(address[0]));
-                        editIndLocal.setFocusableInTouchMode(false);
-                        editIndLocal.setFocusable(false);
                     }
                 });
     }
 
-    public String getAddress(String address){
+    public String getAddress(String address) {
         String rua;
         String setor;
         String cidade;
@@ -355,8 +423,7 @@ public class RegistryActivity extends Activity implements IGetUrl {
             cidade = address.substring(0, pos);
             address = address.replaceAll(cidade + ",", "");
             return rua + ", " + setor + ", " + cidade;
-        }
-        else{
+        } else {
             return address;
         }
     }
@@ -369,6 +436,46 @@ public class RegistryActivity extends Activity implements IGetUrl {
                 + "(" + Uri.encode("nome do local") + ")");
         Intent intent = new Intent(Intent.ACTION_VIEW, mapUri);
         startActivity(intent);
+    }
+
+    private void createLocationRequest() {
+        mLocationRequest = new LocationRequest();
+        mLocationRequest.setInterval(10000);
+        mLocationRequest.setFastestInterval(5000);
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+
+    }
+
+    private void askForLocationChange() {
+        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder().addLocationRequest(mLocationRequest);
+        SettingsClient client = LocationServices.getSettingsClient(this);
+        Task<LocationSettingsResponse> task = client.checkLocationSettings(builder.build());
+
+        task.addOnSuccessListener(locationSettingsResponse -> Toast.makeText(RegistryActivity.this, "Localização está ativada", Toast.LENGTH_SHORT).show());
+
+        task.addOnFailureListener(e -> {
+            if (e instanceof ResolvableApiException) {
+                try {
+                    ResolvableApiException resolvable = (ResolvableApiException) e;
+                    resolvable.startResolutionForResult(RegistryActivity.this, REQUEST_CHECK_SETTINGS);
+                } catch (IntentSender.SendIntentException ignored) {
+                }
+            }
+        });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_CHECK_SETTINGS) {
+            switch (resultCode) {
+                case Activity.RESULT_OK:
+                    Toast.makeText(this, "A localização está agora ativada", Toast.LENGTH_SHORT).show();
+                    break;
+                case Activity.RESULT_CANCELED:
+                    Toast.makeText(this, "O usuário não tem permissão para alterar as configurações de localização", Toast.LENGTH_SHORT).show();
+                    break;
+            }
+        }
     }
 
 

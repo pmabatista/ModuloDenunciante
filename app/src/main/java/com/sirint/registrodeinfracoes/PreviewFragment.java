@@ -1,7 +1,6 @@
 package com.sirint.registrodeinfracoes;
 
-
-import android.content.Intent;
+import android.app.AlertDialog;
 import android.graphics.Bitmap;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
@@ -17,8 +16,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.MediaController;
+import android.widget.VideoView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +34,6 @@ public class PreviewFragment extends Fragment{
     ListView listView;
     @BindView(R.id.mVoltarPreview)
     ImageView mVoltar;
-    ImageView delete;
     List<Bitmap> bitmap = new ArrayList<>();
 
 
@@ -62,7 +60,7 @@ public class PreviewFragment extends Fragment{
 
     }
 
-    @OnClick({R.id.mVoltarPreview,R.id.mDelete})
+    @OnClick({R.id.mVoltarPreview})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.mVoltarPreview:
@@ -70,9 +68,6 @@ public class PreviewFragment extends Fragment{
                 FragmentTransaction ft = fm.beginTransaction();
                 ft.remove(this);
                 ft.commit();
-            break;
-            case R.id.mDelete:
-
             break;
         }
 
@@ -109,12 +104,25 @@ public class PreviewFragment extends Fragment{
         @Override
         public View getView(int i, View view, ViewGroup viewGroup) {
             view = getLayoutInflater().inflate(R.layout.customlayoutpreview,null);
-            delete = (ImageView) view.findViewById(R.id.mDelete);
+            ImageView delete = (ImageView) view.findViewById(R.id.mDelete);
             ImageView video = (ImageView) view.findViewById(R.id.video);
             video.setImageBitmap((bitmap.get(i)));
+            view.setOnClickListener(view1 -> {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                LayoutInflater inflater = requireActivity().getLayoutInflater();
+                builder.setView(inflater.inflate(R.layout.videoplay, null))
+                        .setPositiveButton("OK", (dialogInterface, i12) -> {
+
+                        })
+                        .setNegativeButton("EXCLUIR", (dialogInterface, i1) -> links.remove(i1));
+                builder.create();
+            });
             return view;
         }
     }
+
+
+
 
 
 }

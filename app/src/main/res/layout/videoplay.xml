@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <VideoView
+        android:id="@+id/videoPlay"
+        android:layout_width="410sp"
+        android:layout_height="650sp">
+    </VideoView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/mOk"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="OK"
+            android:layout_gravity="center"
+            android:layout_weight="0.25"/>
+        <Button
+            android:id="@+id/mPlay"
+            android:layout_gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="PLAY|PAUSE"
+            android:layout_weight="0.25"/>
+        <Button
+            android:id="@+id/mProximo"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="Proximo"
+            android:layout_gravity="center"
+            android:layout_weight="0.25"/>
+
+        <Button
+            android:id="@+id/mRemover"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="0.25"
+            android:layout_gravity="center"
+            android:text="REMOVER"/>
+    </LinearLayout>
+
+</LinearLayout>
